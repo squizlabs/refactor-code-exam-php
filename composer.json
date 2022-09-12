@@ -1,0 +1,17 @@
+{
+    "name": "squiz/php-code-exam",
+    "description": "Refactoring PHP exam for Squiz product engineering",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Squiz\\PhpCodeExam\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/http-foundation": "^5.4",
+        "symfony/routing": "^5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

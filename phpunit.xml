@@ -1,0 +1,24 @@
+<phpunit
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false"
+        beStrictAboutCoversAnnotation="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutTodoAnnotatedTests="true"
+        failOnRisky="true"
+        failOnWarning="true"
+>
+    <testsuites>
+        <testsuite name="Tests">
+            <directory suffix="Test.test">tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="memory_limit" value="256M" />
+    </php>
+</phpunit>
