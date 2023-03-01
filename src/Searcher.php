@@ -8,7 +8,8 @@ use Squiz\PhpCodeExam\Mocks\TestData;
 
 class Searcher
 {
-    public $allData = [];
+    public array $allData = [];
+    private array $searchResult;
 
     public function __construct()
     {
@@ -17,27 +18,37 @@ class Searcher
          * in a reasonably quick way
          */
         $this->allData = (new TestData())->getFromDbMock();
+        $this->searchResult = [];
     }
 
-    public function execute($term, $type)
+    /**
+     * @param $term
+     * @param $type
+     * @return array
+     */
+    public function execute($term, $type): array
     {
         foreach ($this->allData as $key => $value) {
             foreach ($value as $index => $reference) {
                 if ($index === $type) {
                     if ($type === 'tags') {
                         if(in_array($term, $reference)) {
-                            return $this->allData[$key] ?? null;
+                            $this->searchResult[] = $this->allData[$key];
                         }
-                    } else if (strpos($reference, $term) > 0) {
-                        return $this->allData[$key] ?? null;
+                    } else if (stripos($reference, $term) > 0) {
+                        $this->searchResult[] = $this->allData[$key];
                     }
                 }
             }
         }
 
-        return false;
+        return $this->searchResult;
     }
 
+    /**
+     * @param $id
+     * @return array|false|mixed
+     */
     public function getPageById($id)
     {
         $pageIds = array_column($this->allData, 'id');
@@ -46,5 +57,37 @@ class Searcher
         }
 
         return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllData(): array
+    {
+        return $this->allData;
+    }
+
+    /**
+     * @param array|array[] $allData
+     */
+    public function setAllData(array $allData): void
+    {
+        $this->allData = $allData;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchResult(): array
+    {
+        return $this->searchResult;
+    }
+
+    /**
+     * @param array $searchResult
+     */
+    public function setSearchResult(array $searchResult): void
+    {
+        $this->searchResult = $searchResult;
     }
 }

@@ -44,7 +44,7 @@ try {
         $data = $searcher->allData;
 
         $null = NULL;
-        $response = empty($data) ? new Response(NULL, Response::HTTP_NO_CONTENT) : new JsonResponse($data, Response::HTTP_ACCEPTED);
+        $response = empty($data) ? new Response(NULL, Response::HTTP_NO_CONTENT) : new JsonResponse(['data' => $data], Response::HTTP_ACCEPTED);
     }
 
     $response->send();
