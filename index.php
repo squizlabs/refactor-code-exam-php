@@ -36,7 +36,8 @@ try {
         if ($id == null) {
             $response = new JsonResponse(['data' => false], Response::HTTP_BAD_REQUEST);
         } else {
-            $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->getPageById($id)], Response::HTTP_PARTIAL_CONTENT);
+            $result = (new \Squiz\PhpCodeExam\Searcher())->getPageById($id);
+            $response = new JsonResponse(['data' => $result], $result ? Response::HTTP_PARTIAL_CONTENT : Response::HTTP_NOT_FOUND);
         }
     } else {
         // print all
