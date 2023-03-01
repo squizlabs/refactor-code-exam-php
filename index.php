@@ -16,70 +16,48 @@ logMsg(
 
 try {
     if (preg_match('/contents/', $path) !== 0) {
-        if ($request->query->get('term') !== null) {
+        if ($request->query->get('term') == null) {
+            $response = new JsonResponse(['data' => false], Response::HTTP_BAD_REQUEST);
+        } else {
             $term = $request->query->get('term');
+            $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, $type = 'content')], Response::HTTP_OK);
         }
-
-        $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, $type = 'content')], Response::HTTP_OK);
-        logMsg(
-            sprintf('Sent response %s', $response->getContent()),
-            'response'
-        );
-        $response->send();
-        exit(0);
     }
-
-    if (preg_match('/tags/', $path) !== 0) {
-
-        if ($request->query->get('term') != null) {
+    else if (preg_match('/tags/', $path) !== 0) {
+        if ($request->query->get('term') == null) {
+            $response = new JsonResponse(['data' => false], Response::HTTP_BAD_REQUEST);
+        } else {
             $term = $request->query->get('term');
+            $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, 'tags')], Response::HTTP_OK);
         }
-
-        $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, 'tags')], Response::HTTP_OK);
-        $response->send();
-        logMsg(
-            sprintf('Sent response %s', $response->getContent()),
-            'response'
-        );
-        exit(0);
-    }
-
-    if (preg_match('/pages/', $path) !== 0) {
-
+    } else if (preg_match('/pages/', $path) !== 0) {
         $paths = explode('/', $path);
         $id = $paths[2];
+        if ($id == null) {
+            $response = new JsonResponse(['data' => false], Response::HTTP_BAD_REQUEST);
+        } else {
+            $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->getPageById($id)], Response::HTTP_PARTIAL_CONTENT);
+        }
+    } else {
+        // print all
+        $searcher = new \Squiz\PhpCodeExam\Searcher();
+        $data = $searcher->allData;
 
-        $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->getPageById($id)], Response::HTTP_PARTIAL_CONTENT);
-        $response->send();
-        die();
+        $null = NULL;
+        $response = empty($data) ? new Response(NULL, Response::HTTP_NO_CONTENT) : new JsonResponse($data, Response::HTTP_ACCEPTED);
     }
 
-    $searcher = new \Squiz\PhpCodeExam\Searcher();
-    $data = $searcher->allData;
-
-    $null = NULL;
-    $response = empty($data) ? new Response($null, Response::HTTP_NO_CONTENT) : new JsonResponse($data, Response::HTTP_ACCEPTED);
-    error_log(
-        sprintf('Sent response %s', $response->getContent()),
-        0,
-        __DIR__ . '/logs/response.log'
-    );
     $response->send();
-
+    logMsg(
+        sprintf('Sent response %s', $response->getContent()),
+        'response'
+    );
 } catch (Exception $ex) {
     new JsonResponse(['exception' => $ex->getMessage()], Response::HTTP_BAD_REQUEST);
     logMsg(
         sprintf('%s: %s', $ex->getCode(), $ex->getMessage())
     );
 }
-
-
-$response = new JsonResponse(['error' => 'Failed to get pages'], Response::HTTP_INTERNAL_SERVER_ERROR);
-$response->send();
-logMsg(
-    sprintf('Failed to get pages'),
-    'failure'
-);
 
 function logMsg($message, $type = 'error')
 {

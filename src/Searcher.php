@@ -29,7 +29,7 @@ class Searcher
                             return $this->allData[$key] ?? null;
                         }
                     } else if (strpos($reference, $term) > 0) {
-                        return $this->allData[$key] ?? null ;
+                        return $this->allData[$key] ?? null;
                     }
                 }
             }
@@ -45,6 +45,6 @@ class Searcher
             return $this->allData[array_flip($pageIds)[$id]];
         }
 
-        return $id;
+        return false;
     }
 }
