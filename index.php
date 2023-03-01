@@ -20,7 +20,6 @@ try {
             $term = $request->query->get('term');
         }
 
-        header('Content-Type: application/json; charset=utf-8');
         $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, $type = 'content')], Response::HTTP_OK);
         logMsg(
             sprintf('Sent response %s', $response->getContent()),
@@ -36,7 +35,6 @@ try {
             $term = $request->query->get('term');
         }
 
-        header('Content-Type: application/json; charset=utf-8');
         $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->execute($term, 'tags')], Response::HTTP_OK);
         $response->send();
         logMsg(
@@ -51,7 +49,6 @@ try {
         $paths = explode('/', $path);
         $id = $paths[2];
 
-        header('Content-Type: application/json; charset=utf-8');
         $response = new JsonResponse(['data' => (new \Squiz\PhpCodeExam\Searcher())->getPageById($id)], Response::HTTP_PARTIAL_CONTENT);
         $response->send();
         die();
