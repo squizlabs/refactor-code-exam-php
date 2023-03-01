@@ -15,7 +15,7 @@ class SearchIdsTest extends \PHPUnit\Framework\TestCase
         );
 
         self::assertSame(
-            'foo',
+            false,
             $searcher->getPageById('foo')
         );
 
