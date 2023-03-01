@@ -24,20 +24,12 @@ class Searcher
         foreach ($this->allData as $key => $value) {
             foreach ($value as $index => $reference) {
                 if ($index === $type) {
-                    if ($reference === $term) {
-                        return $this->allData[$key];
-                    }
-
-                    if (is_array($reference)) {
-                        if (in_array($term, $reference)) {
-                            if ($type === 'tags') {
-                                return isset($this->allData[$key]) ? $this->allData[$key] : null;
-                            }
+                    if ($type === 'tags') {
+                        if(in_array($term, $reference)) {
+                            return $this->allData[$key] ?? null;
                         }
-                    }
-
-                    if (strpos($reference, $term) > 0) {
-                        return $this->allData[$key];
+                    } else if (strpos($reference, $term) > 0) {
+                        return $this->allData[$key] ?? null ;
                     }
                 }
             }

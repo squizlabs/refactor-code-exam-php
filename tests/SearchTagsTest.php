@@ -12,7 +12,7 @@ class SearchTagsTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame(
             ['mcbeth', 'shakespeare', 'scotland'],
-            $searcher->execute('shakespeare', 'content')['tags']
+            $searcher->execute('assassination', 'content')['tags']
         );
 
         self::assertFalse(
